@@ -92,42 +92,33 @@ public class MultiArray : IMultiArray
             }
         }
 
-        int maxColIndex = 0;
-        T maxSum = T.Zero;
+        T[][] colJagged = new T[maxColLength][];
 
         for (int col = 0; col < maxColLength; col++)
         {
-            T sum = T.Zero;
+            colJagged[col] = new T[rowCount];
 
             for (int row = 0; row < rowCount; row++)
             {
                 if (arrJagged[row] != null && arrJagged[row].Length > col)
                 {
-                    sum += arrJagged[row][col];
+                    colJagged[col][row] = arrJagged[row][col];
+                }
+                else
+                {
+                    colJagged[col][row] = T.Zero;
                 }
             }
-
-            if (col == 0 || sum > maxSum)
-            {
-                maxSum = sum;
-                maxColIndex = col;
-            }
         }
 
-        T?[] result = new T?[rowCount];
-        for (int row = 0; row < rowCount; row++)
-        {
-            if (arrJagged[row] != null && arrJagged[row].Length > maxColIndex)
-            {
-                result[row] = arrJagged[row][maxColIndex];
-            }
-            else
-            {
-                result[row] = T.Zero;
-            }
-        }
+        var resultTuple = MaxRowIndexSum(colJagged);
 
-        return result;
+        if (resultTuple == null)
+            return null;
+
+        int index = resultTuple.Item1;
+
+        return colJagged[index];
     }
 
     public static T[][]? Split<T>(Tuple<T, T, T>[] input)
@@ -142,3 +133,10 @@ public class MultiArray : IMultiArray
         throw new NotImplementedException();
     }
 }
+
+
+
+
+
+
+
