@@ -123,8 +123,24 @@ public class MultiArray : IMultiArray
 
     public static T[][]? Split<T>(Tuple<T, T, T>[] input)
     {        
-        //ToDo
-        throw new NotImplementedException();
+        if (input == null)
+            return null;
+
+        int inputLength = input.Length;
+
+        T[][] result = new T[3][];
+        result[0] = new T[inputLength];
+        result[1] = new T[inputLength];
+        result[2] = new T[inputLength];
+
+        for (int i = 0; i < inputLength; i++)
+        {
+            result[0][i] = input[i].Item1;
+            result[1][i] = input[i].Item2;
+            result[2][i] = input[i].Item3;
+        }
+
+        return result;
     }
 
     public static T[,]? Zip<T>(T[] a, T[] b)
