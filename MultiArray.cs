@@ -78,32 +78,56 @@ public class MultiArray : IMultiArray
 
     public static T?[] MaxCol<T>(T[][] arrJagged) where T : INumber<T>
     {
-        T maxSum = T.Zero;
-        int maxColLength = arrJagged.Where(row => row != null).Max(row => row.Length);
+        if (arrJagged == null)
+            return null;
 
-        List<T[]> colArrays = new List<T[]>();
+        int rowCount = arrJagged.Length;
+
+        int maxColLength = 0;
+        for (int i = 0; i < rowCount; i++)
+        {
+            if (arrJagged[i] != null && arrJagged[i].Length > maxColLength)
+            {
+                maxColLength = arrJagged[i].Length;
+            }
+        }
+
+        int maxColIndex = 0;
+        T maxSum = T.Zero;
 
         for (int col = 0; col < maxColLength; col++)
         {
-            List<T> colArray = new List<T>();
-            for (int row = 0; row < arrJagged.Length; row++)
+            T sum = T.Zero;
+
+            for (int row = 0; row < rowCount; row++)
             {
                 if (arrJagged[row] != null && arrJagged[row].Length > col)
                 {
-                    colArray.Add(arrJagged[row][col]);
-                }
-                else
-                {
-                    colArray.Add(T.Zero);
+                    sum += arrJagged[row][col];
                 }
             }
-            colArrays.Add(colArray.ToArray());
+
+            if (col == 0 || sum > maxSum)
+            {
+                maxSum = sum;
+                maxColIndex = col;
+            }
         }
-        T[][] colJagged = colArrays.ToArray();
 
-        var (index, sum) = MaxRowIndexSum(colJagged);
+        T?[] result = new T?[rowCount];
+        for (int row = 0; row < rowCount; row++)
+        {
+            if (arrJagged[row] != null && arrJagged[row].Length > maxColIndex)
+            {
+                result[row] = arrJagged[row][maxColIndex];
+            }
+            else
+            {
+                result[row] = T.Zero;
+            }
+        }
 
-        return colJagged[index];
+        return result;
     }
 
     public static T[][]? Split<T>(Tuple<T, T, T>[] input)
