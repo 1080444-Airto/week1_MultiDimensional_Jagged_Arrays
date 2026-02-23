@@ -144,15 +144,19 @@ public class MultiArray : IMultiArray
     }
 
     public static T[,]? Zip<T>(T[] a, T[] b)
-    {        
-        //ToDo
-        throw new NotImplementedException();
+    {
+        if (a == null || b == null)
+            return null;
+
+        int maxLength = (a.Length > b.Length) ? a.Length : b.Length;
+
+        T[,] result = new T[maxLength, 2];
+        for (int row = 0; row < maxLength; row++)
+        {
+            result[row, 0] = a[row];
+            result[row, 1] = a[row];
+        }
+
+        return result;
     }
 }
-
-
-
-
-
-
-
