@@ -151,10 +151,11 @@ public class MultiArray : IMultiArray
         int maxLength = (a.Length > b.Length) ? a.Length : b.Length;
 
         T[,] result = new T[maxLength, 2];
+
         for (int row = 0; row < maxLength; row++)
         {
-            result[row, 0] = a[row];
-            result[row, 1] = a[row];
+            result[row, 0] = (row < a.Length) ? a[row] : default(T);
+            result[row, 1] = (row < b.Length) ? b[row] : default(T);
         }
 
         return result;
